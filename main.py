@@ -7,13 +7,37 @@ Created on Mon May 18 23:28:55 2026
 
 import feedparser
 
-rss_url = "https://www.espn.com/espn/rss/news"
+rss_urls = [
+    "https://e00-marca.uecdn.es/rss/futbol.xml",
+    "https://feeds.elpais.com/mrss-s/pages/ep/site/as.com/portada"
+]
 
-feed = feedparser.parse(rss_url)
+for rss_url in rss_urls:
 
-print("ÚLTIMAS NOTICIAS:\n")
+    feed = feedparser.parse(rss_url)
 
-for noticia in feed.entries[:5]:
-    print(noticia.title)
-    print(noticia.link)
-    print()
+    print("\n====================")
+    print("NUEVA FUENTE")
+    print("====================\n")
+
+    for noticia in feed.entries[:10]:
+
+        titulo = noticia.title.lower()
+
+        # filtro fútbol
+        palabras_futbol = [
+            "fútbol",
+            "football",
+            "liga",
+            "champions",
+            "real madrid",
+            "barça",
+            "barcelona",
+            "atlético"
+        ]
+
+        if any(p in titulo for p in palabras_futbol):
+
+            print(noticia.title)
+            print(noticia.link)
+            print()
