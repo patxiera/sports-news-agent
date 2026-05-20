@@ -6,38 +6,33 @@ Created on Mon May 18 23:28:55 2026
 """
 
 import feedparser
+import requests
+
+TOKEN = "8601460374:AAHMK1KGQqB3T3EWOBo68kJTzNo8k5ihL80"
+CHAT_ID = "8943577359"
 
 rss_urls = [
     "https://e00-marca.uecdn.es/rss/futbol.xml",
     "https://feeds.elpais.com/mrss-s/pages/ep/site/as.com/portada"
 ]
 
-for rss_url in rss_urls:
+palabras = ["fútbol", "liga", "champions", "real madrid", "barça"]
 
-    feed = feedparser.parse(rss_url)
+for rss in rss_urls:
+    feed = feedparser.parse(rss)
 
-    print("\n====================")
-    print("NUEVA FUENTE")
-    print("====================\n")
+    for n in feed.entries[:10]:
+        titulo = n.title.lower()
 
-    for noticia in feed.entries[:10]:
+        if any(p in titulo for p in palabras):
 
-        titulo = noticia.title.lower()
+            mensaje = f"{n.title}\n{n.link}"
 
-        # filtro fútbol
-        palabras_futbol = [
-            "fútbol",
-            "football",
-            "liga",
-            "champions",
-            "real madrid",
-            "barça",
-            "barcelona",
-            "atlético"
-        ]
+            url = f"https://api.telegram.org/bot{TOKEN}/sendMessage"
 
-        if any(p in titulo for p in palabras_futbol):
+            requests.post(url, data={
+                "chat_id": CHAT_ID,
+                "text": mensaje
+            })
 
-            print(noticia.title)
-            print(noticia.link)
-            print()
+            print("Enviado:", n.title)
