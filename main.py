@@ -38,7 +38,7 @@ for rss in rss_urls:
 
     print("Leyendo:", rss)
 
-    for n in feed.entries[:15]:
+    for n in feed.entries:
 
         link = n.link
         titulo = n.title
